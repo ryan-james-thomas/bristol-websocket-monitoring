@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en-US">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bristol Wavemeter</title>
+<!--    <script src="../jquery-3.5.1.min.js"></script>-->
+    <script type="text/javascript">
+      var ws = new WebSocket("ws://172.22.251.154:5678/");
+      ws.onmessage = function(event) {
+	  var s = JSON.parse(event.data);
+          document.getElementById("frequency").innerHTML = s.frequency;
+          document.getElementById("power").innerHTML = s.power;
+	  document.getElementById("error").innerHTML = s.msg;
+          var D = s.frequency - document.getElementById("offset").value;
+          document.getElementById("detuning").innerHTML = D.toFixed(6);
+      }
+
+
+    </script>
+
+    <style type="text/css">
+       th {
+           text-align: left;
+       }
+       td {
+           text-align: right;
+       }
+      input[type="text"] {
+           text-align: right;
+      }
+    </style>
+    
+</head>
+<body>
+  <h2>Bristol Wavemeter</h2>
+  <table>
+    <tr>
+      <th>Frequency [GHz]</th>
+      <td id="frequency"></td>
+    </tr>
+    <tr>
+      <th>Offset [GHz]</th>
+      <td><input type="text" id="offset" value="0"/></td>
+    </tr>
+    <tr>
+      <th>Detuning [GHz]</th>
+      <td id="detuning"></td>
+    </tr>
+    <tr>
+      <th>Power [mW]</th>
+      <td id="power"></td>
+    </tr>
+    <tr>
+      <th>Error:</th>
+      <td id="error"></td>
+    </tr>
+  </table>
+</body>
+</html>
