@@ -8,12 +8,12 @@
     <script type="text/javascript">
       var ws = new WebSocket("ws://172.22.251.154:5678/");
       ws.onmessage = function(event) {
-	  var s = JSON.parse(event.data);
-          document.getElementById("frequency").innerHTML = s.frequency;
-          document.getElementById("power").innerHTML = s.power;
-	  document.getElementById("error").innerHTML = s.msg;
-          var D = s.frequency - document.getElementById("offset").value;
-          document.getElementById("detuning").innerHTML = D.toFixed(6);
+      var s = JSON.parse(event.data);
+        document.getElementById("frequency").innerHTML = s.frequency;
+        document.getElementById("power").innerHTML = s.power;
+        document.getElementById("error").innerHTML = s.msg;
+        var D = s.frequency - document.getElementById("offset").value;
+        document.getElementById("detuning").innerHTML = D.toFixed(6);
       }
 
 
