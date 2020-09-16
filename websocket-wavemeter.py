@@ -10,9 +10,11 @@ import Bristol621
 Define the Bristol621 device.  The serial device given here maps to a specific USB port on the
 Raspberry Pi - in this case, the bottom-right USB port
 """
-device = Bristol621.Wavemeter('/dev/serial/by-path/platform-3f980000.usb-usb-0:1.2:1.0-port0')
-device.set_wavelength_units('GHz')
-device.set_medium('vacuum') 
+#device = Bristol621.Wavemeter('/dev/serial/by-path/platform-3f980000.usb-usb-0:1.2:1.0-port0')
+ser_port = '/dev/ttyUSB0'
+device = Bristol621.Wavemeter(None)
+#device.set_wavelength_units('GHz')
+#device.set_medium('vacuum') 
 
 """
 Define a measurement/control class.  This just makes it easier to pass a bunch
@@ -52,7 +54,10 @@ async def get_wavemeter_data():
         serial exception if it fails
         """
         if not device.con.is_open:
+            device.con.port = ser_port
             device.con.open()
+            device.set_wavelength_units('GHz')
+            device.set_medium('vacuum')
         meas.frequency = device.get_wavelength()
         meas.power = device.get_power()
         meas.err = False
