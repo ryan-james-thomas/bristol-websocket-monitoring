@@ -7,8 +7,10 @@ import json
 import Bristol621
 
 """
-Define the Bristol621 device.  The serial device given here maps to a specific USB port on the
-Raspberry Pi - in this case, the bottom-right USB port
+Define the Bristol621 device.  The serial device given here maps to the first USB-to-serial
+device plugged into the Pi.  The argument for the Bristol621.Wavemeter class is None so that
+the serial port is not automatically opened.  This allows the program to execute when the Pi
+boots even if the wavemeter isn't plugged in.
 """
 #device = Bristol621.Wavemeter('/dev/serial/by-path/platform-3f980000.usb-usb-0:1.2:1.0-port0')
 ser_port = '/dev/ttyUSB0'
@@ -51,7 +53,7 @@ async def get_wavemeter_data():
     try:
         """
         This if statement attempts to open the serial port if it is not open and will raise a
-        serial exception if it fails
+        serial exception if it fails.
         """
         if not device.con.is_open:
             device.con.port = ser_port
