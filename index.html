@@ -16,6 +16,10 @@
         document.getElementById("detuning").innerHTML = D.toFixed(6);
       }
 
+      function setOffset(id) {
+        document.getElementById("offset").value = document.getElementById(id).innerHTML;
+      }
+
 
     </script>
 
@@ -28,6 +32,19 @@
        }
       input[type="text"] {
            text-align: right;
+      }
+
+      tr.offsets {
+        cursor: pointer;
+        border: none;
+      }
+
+      tr.offsets:nth-child(even) {
+        background-color: #DDDDDD;
+      }
+
+      tr.offsets:nth-child(odd) {
+        background-color: #999999;
       }
     </style>
     
@@ -55,6 +72,30 @@
       <th>Error:</th>
       <td id="error"></td>
     </tr>
+  </table>
+
+  <table class="offsets">
+    <tr class="offsets" onclick="setOffset('offset-Rb87-D2-F2-F3');">
+      <th>Rb87 D2 F=2 to F'=3</th>
+      <td id="offset-Rb87-D2-F2-F3">384227.921464</td>
+      <td>GHz</td>
+    </tr>
+    <tr class="offsets" onclick="setOffset('offset-Rb87-D2-F1-F3');">
+      <th>Rb87 D2 F=2 to F'=3</th>
+      <td id="offset-Rb87-D2-F1-F3">384234.756145</td>
+      <td>GHz</td>
+    </tr>
+    <tr class="offsets" onclick="setOffset('offset-K40-D2-F7/2-F');">
+      <th>K40 D2 F=7/2 to F'</th>
+      <td id="offset-K40-D2-F7/2-F">391015.707750</td>
+      <td>GHz</td>
+    </tr>
+    <tr class="offsets" onclick="setOffset('offset-K40-D2-F9/2-F');">
+      <th>K40 D2 F=9/2 to F'</th>
+      <td id="offset-K40-D2-F9/2-F">391016.993550</td>
+      <td>GHz</td>
+    </tr>
+
   </table>
 </body>
 </html>

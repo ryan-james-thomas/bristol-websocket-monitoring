@@ -5,6 +5,8 @@ import websockets
 import serial
 import json
 import Bristol621
+import numpy as np
+import paho.mqtt.client as mqtt
 
 """
 Define the Bristol621 device.  The serial device given here maps to the first USB-to-serial
@@ -29,6 +31,8 @@ class MeasurementResult:
         self.dt = 0
         self.err = False
         self.msg = "No Error"
+        self.count = 0
+        self.l = []
 
     def serialize(self):
         v = {"frequency":f"{self.frequency:.6f}",
@@ -42,6 +46,25 @@ Instantiate a MeasurementResult object in the global scope so that it can be rea
 by all subsequent functions
 """
 meas = MeasurementResult(0,0,0.1)
+
+"""
+Connect MQTT
+"""
+mqtt_server = "hugin.px.otago.ac.nz"
+mqtt_port = 1883
+mqtt_user = None
+mqtt_pass = None
+
+mqtt_topic_base = "sensor/wavemeter"
+
+def on_connect(client,userdata,flags,rc):
+    print("Connected with result code "+str(rc))
+
+client = mqtt.Client()
+client.on_connect = on_connect
+
+client.connect(mqtt_server,mqtt_port,60)
+client.loop_start()
 
 """
 Define an asynchronous function that gets data from the wavemeter.  We use a try/catch statement
@@ -65,7 +88,18 @@ async def get_wavemeter_data():
         meas.err = False
         meas.msg = "No Error"
         meas.dt = 0.1
-
+        if meas.count == 0:
+            meas.l = []
+            meas.l.append(meas.frequency)
+            meas.count += 1
+        elif meas.count < 20:
+            meas.l.append(meas.frequency)
+            meas.count += 1
+        else:
+            meas.l.append(meas.frequency)
+            data_lambda = {'mean':np.mean(meas.l),'std':np.std(meas.l),'min':np.min(meas.l),'max':np.max(meas.l),'units':'GHz'}
+            client.publish(mqtt_topic_base+'/frequency',json.dumps(data_lambda))
+            meas.count = 0
     except serial.SerialException:
         device.con.close()
         meas.dt = 2
